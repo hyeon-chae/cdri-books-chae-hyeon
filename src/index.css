@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,7 +11,7 @@
 
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
+	background-color: #ffffff;
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -18,25 +20,18 @@
 }
 
 a {
-	font-weight: 500;
-	color: #646cff;
+	color: #353c49;
 	text-decoration: inherit;
-}
-a:hover {
-	color: #535bf2;
 }
 
 body {
 	margin: 0;
-	display: flex;
-	place-items: center;
-	min-width: 320px;
-	min-height: 100vh;
 }
 
 h1 {
-	font-size: 3.2em;
-	line-height: 1.1;
+	font-size: 24px;
+	font-weight: 700;
+	letter-spacing: 0;
 }
 
 button {
@@ -134,4 +129,20 @@ button:focus-visible {
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+.tab-trigger-custom {
+	@apply relative text-[#353C49] text-[20px] font-bold bg-transparent px-0 py-2 rounded-none border-none;
+	@apply shadow-none focus:outline-none focus:ring-0;
+	@apply hover:shadow-none active:shadow-none;
+}
+
+.tab-trigger-custom[data-state='active'] {
+	box-shadow: none !important;
+	color: #353c49 !important;
+}
+
+.tab-trigger-custom[data-state='active']::after {
+	content: '';
+	@apply absolute bottom-0 left-0 w-full h-[2px] bg-[#4880EE];
 }
