@@ -3,7 +3,34 @@ import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { BookItem } from '@/components/BookItem';
 
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { getSearchBooks } from '@/lib/api/search';
+import { useState } from 'react';
+import type { BookItemData } from '@/lib/types/search';
+
 export default function SearchPage() {
+	const [books, setBooks] = useState<BookItemData[]>([]);
+	const [totalCount, setTotalCount] = useState(0);
+
+	const [searchQuery, setSearchQuery] = useState({
+		query: '소설',
+		page: 1,
+		size: 10,
+	});
+
+	const searchMutation = useMutation({
+		mutationFn: () =>
+			getSearchBooks(searchQuery.query, searchQuery.page, searchQuery.size),
+		onSuccess: (data) => {
+			console.log('Search results:', data);
+			setBooks(data.documents);
+			setTotalCount(data.meta.total_count);
+		},
+		onError: (error: any) => {
+			console.error('Error fetching search results:', error);
+		},
+	});
+
 	return (
 		<div className="w-full">
 			<div className="space-y-6">
@@ -26,6 +53,9 @@ export default function SearchPage() {
 					<Button
 						variant="outline"
 						className="border-[#8D94A0] text-[#8D94A0] px-2.5 py-2.5 text-sm"
+						onClick={() => {
+							searchMutation.mutate();
+						}}
 					>
 						상세검색
 					</Button>

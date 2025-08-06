@@ -2,7 +2,7 @@ import { apiGet } from './common';
 
 import type { SearchResult } from '../types/search';
 
-export const searchBooks = async (
+export const getSearchBooks = async (
 	query: string,
 	page: number = 1,
 	size: number = 10
