@@ -13,6 +13,8 @@ export const useSearchHistoryStore = create<SearchHistoryStore>()(
 		(set, get) => ({
 			histories: [],
 			addHistory: (keyword: string) => {
+				const trimmed = keyword.trim();
+				if (!trimmed) return;
 				const { histories } = get();
 				const filtered = histories.filter((item) => item !== keyword); // 중복 제거
 				const newHistories = [keyword, ...filtered].slice(0, 8); // 8개 유지
