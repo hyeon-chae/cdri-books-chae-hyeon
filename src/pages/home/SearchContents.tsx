@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { BookItemToggle } from '@/components/BookItemToggle';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { getSearchBooks } from '@/lib/api/search';
 import { useState } from 'react';
 import type { BookItemData } from '@/lib/types/search';
+import Empty from '@/components/Empty';
 
 export default function SearchPage() {
 	const [books, setBooks] = useState<BookItemData[]>([]);
@@ -33,7 +34,7 @@ export default function SearchPage() {
 
 	return (
 		<div className="w-full">
-			<div className="space-y-6">
+			<div className="space-y-4">
 				{/* 제목 */}
 				<p className="text-[22px] font-bold text-[##1A1E27]">도서 검색</p>
 
@@ -62,7 +63,7 @@ export default function SearchPage() {
 				</div>
 
 				{/* 검색 결과 요약*/}
-				<p className="text-sm text-text-primary font-[500]">
+				<p className="text-sm text-text-primary font-[500] pt-2">
 					도서 검색 결과&nbsp;&nbsp; 총{' '}
 					<span className="text-[#4880EE] font-[500]">21</span>건
 				</p>
@@ -70,14 +71,8 @@ export default function SearchPage() {
 			{/* 검색 결과 목록 */}
 			<div className="mt-9">
 				{books.length === 0 ? (
-					<div className="pt-20 gap-6 flex flex-col items-center">
-						<img
-							src="/img/icon_book.svg"
-							alt="검색 결과가 없습니다."
-							width={80}
-							height={80}
-						/>
-						<p className="text-gray-500">검색 결과가 없습니다.</p>
+					<div className="pt-20">
+						<Empty msg="검색된 결과가 없습니다." />
 					</div>
 				) : (
 					books.map((item, index) => <BookItemToggle key={index} item={item} />)
