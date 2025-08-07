@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
-import { BookItem } from '@/components/BookItem';
+import { BookItemToggle } from '@/components/BookItemToggle';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getSearchBooks } from '@/lib/api/search';
@@ -80,7 +80,7 @@ export default function SearchPage() {
 						<p className="text-gray-500">검색 결과가 없습니다.</p>
 					</div>
 				) : (
-					books.map((item, index) => <BookItem key={index} item={item} />)
+					books.map((item, index) => <BookItemToggle key={index} item={item} />)
 				)}
 			</div>
 		</div>
