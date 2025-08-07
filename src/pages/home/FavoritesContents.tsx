@@ -1,10 +1,17 @@
 import { BookItemToggle } from '@/components/BookItemToggle';
 import Empty from '@/components/Empty';
+import { PaginationWrapper } from '@/components/PaginationWrapper';
 
 import { useBookmarkStore } from '@/stores/bookmarkStore';
+import { usePagination } from '@/hooks/usePagination';
 
 export default function FavoritesContents() {
 	const { bookmarks } = useBookmarkStore();
+
+	const { currentItems, page, totalPages, setPage } = usePagination(
+		bookmarks,
+		10
+	);
 
 	return (
 		<div className="w-full">
@@ -18,14 +25,22 @@ export default function FavoritesContents() {
 			</div>
 
 			<div className="mt-9">
-				{bookmarks.length === 0 ? (
+				{currentItems.length === 0 ? (
 					<div className="pt-20">
 						<Empty msg="찜한 책이 없습니다." />
 					</div>
 				) : (
-					bookmarks.map((item, index) => (
-						<BookItemToggle key={index} item={item} />
-					))
+					<>
+						{currentItems.map((item, index) => (
+							<BookItemToggle key={index} item={item} />
+						))}
+						<PaginationWrapper
+							page={page}
+							totalPages={totalPages}
+							onChange={setPage}
+							className="mt-6"
+						/>
+					</>
 				)}
 			</div>
 		</div>
