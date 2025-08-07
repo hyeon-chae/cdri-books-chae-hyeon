@@ -8,7 +8,7 @@ interface BookListItemProps {
 	onToggleDetail: () => void;
 	openDetail: boolean;
 	handlePurchase: (url: string) => void;
-	onToggleFavorite: (isbn: string) => void;
+	onToggleFavorite: () => void;
 	favorite: boolean;
 }
 
@@ -37,7 +37,7 @@ export function BookListItem({
 						width={24}
 						height={24}
 						className="absolute top-0 left-14 cursor-pointer"
-						onClick={() => onToggleFavorite(item.isbn)}
+						onClick={onToggleFavorite}
 					/>
 				</div>
 				<div className="flex gap-4 items-center">

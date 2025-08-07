@@ -8,7 +8,7 @@ interface BookDetailItemProps {
 	onToggleDetail: () => void;
 	openDetail: boolean;
 	handlePurchase: (url: string) => void;
-	onToggleFavorite: (isbn: string) => void;
+	onToggleFavorite: () => void;
 	favorite: boolean;
 }
 
@@ -37,7 +37,7 @@ export function BookDetailItem({
 					width={24}
 					height={24}
 					className="absolute top-2 right-2 cursor-pointer"
-					onClick={() => onToggleFavorite(item.isbn)}
+					onClick={onToggleFavorite}
 				/>
 			</div>
 

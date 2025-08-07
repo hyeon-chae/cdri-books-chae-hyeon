@@ -4,22 +4,25 @@ import { type BookItemData } from '@/lib/types/search';
 import { BookListItem } from './BookListItem';
 import { BookDetailItem } from './BookDetailItem';
 
+import { useBookmarkStore } from '@/stores/bookmarkStore';
+
 interface BookItemToggleProps {
 	item: BookItemData;
 }
 
 export function BookItemToggle({ item }: BookItemToggleProps) {
 	const [openDetail, setOpenDetail] = useState(false);
-	const [favorite, setFavorite] = useState(false);
+
+	const { toggleBookmark, isBookmarked } = useBookmarkStore();
+	const favorite = isBookmarked(item.isbn);
 
 	const onToggleDetail = useCallback(() => {
 		setOpenDetail((prev) => !prev);
 	}, []);
 
-	const onToggleFavorite = useCallback((isbn: string) => {
-		setFavorite((prev) => !prev);
-		console.log(`Toggled favorite for ISBN: ${isbn}`);
-	}, []);
+	const onToggleFavorite = useCallback(() => {
+		toggleBookmark(item);
+	}, [item, toggleBookmark]);
 
 	const handlePurchase = useCallback((url: string) => {
 		// 클릭시 새탭으로 url 열기
