@@ -1,4 +1,3 @@
-// src/components/ui/PaginationWrapper.tsx
 import {
 	Pagination,
 	PaginationContent,
