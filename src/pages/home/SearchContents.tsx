@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Empty from '@/components/Empty';
@@ -9,8 +9,10 @@ import { BookItemToggle } from '@/components/BookItemToggle';
 import { useSearchBooks } from '@/hooks/useSearchBooks';
 import { formatCurrency } from '@/lib/utils';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
+import { useSearchHistoryStore } from '@/stores/searchHistoryStore';
 
 export default function SearchContents() {
+	const { histories, addHistory, removeHistory } = useSearchHistoryStore();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [inputValue, setInputValue] = useState('');
 
@@ -25,7 +27,25 @@ export default function SearchContents() {
 	const onSearch = useCallback(() => {
 		setSearchQuery(inputValue);
 		setEnabled(true);
+		addHistory(inputValue);
 	}, [inputValue]);
+
+	const onRemoveHistory = useCallback(
+		(keyword: string) => {
+			removeHistory(keyword);
+		},
+		[removeHistory]
+	);
+
+	const onSearchHistory = useCallback(
+		(keyword: string) => {
+			setInputValue(keyword);
+			setSearchQuery(keyword);
+			setEnabled(true);
+			addHistory(keyword);
+		},
+		[addHistory]
+	);
 
 	// 스크롤 감지 후 fetchNextPage 호출
 	const loadMoreRef = useInfiniteScroll({
@@ -46,23 +66,40 @@ export default function SearchContents() {
 				{/* 검색창 + 버튼 */}
 				<div className="flex items-center gap-4">
 					<div className="relative w-[480px] max-w-lg bg-[#F2F4F6] px-2.5 rounded-full">
-						<Search
-							className="absolute left-4 top-1/2 -translate-y-1/2 text-[#353C49]"
-							size={30}
-						/>
-						<Input
-							type="text"
-							placeholder="검색어를 입력하세요"
-							value={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key === 'Enter') {
-									onSearch();
-								}
-							}}
-							disabled={isLoading}
-							className="pl-12 pr-4 rounded-full bg-[#F2F4F6] focus-visible:ring-0 focus-visible:ring-offset-0 h-[50px]"
-						/>
+						<div className="flex items-center">
+							<Search
+								className="absolute left-4 top-7 -translate-y-1/2 text-text-primary"
+								size={30}
+							/>
+							<Input
+								type="text"
+								placeholder="검색어를 입력하세요"
+								value={inputValue}
+								onChange={(e) => setInputValue(e.target.value)}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter') {
+										onSearch();
+									}
+								}}
+								disabled={isLoading}
+								className="pl-12 pr-4 rounded-full bg-[#F2F4F6] focus-visible:ring-0 focus-visible:ring-offset-0 h-[50px]"
+							/>
+						</div>
+						{histories.length > 0 &&
+							histories.map((history) => (
+								<div
+									className="py-3 pl-[50px] pr-6 flex items-center justify-between"
+									key={history}
+								>
+									<p
+										className="text-text-subtitle font-medium"
+										onClick={() => onSearchHistory(history)}
+									>
+										{history}
+									</p>
+									<X size={24} onClick={() => onRemoveHistory(history)} />
+								</div>
+							))}
 					</div>
 					<Button
 						variant="outline"
@@ -82,6 +119,7 @@ export default function SearchContents() {
 					건
 				</p>
 			</div>
+
 			{/* 검색 결과 목록 */}
 			<div className="mt-9 h-auto overflow-y-scroll">
 				{books.length === 0 ? (
@@ -92,7 +130,10 @@ export default function SearchContents() {
 					books.map((item) => <BookItemToggle item={item} key={item.isbn} />)
 				)}
 			</div>
+
+			{/* 옵저버가 인지하는 요소 */}
 			<div ref={loadMoreRef} style={{ height: '1px' }} />
+
 			{isLoading && (
 				<p className="text-center text-text-secondary py-10">로딩 중...</p>
 			)}
