@@ -6,8 +6,6 @@ import { useBookmarkStore } from '@/stores/bookmarkStore';
 export default function FavoritesContents() {
 	const { bookmarks } = useBookmarkStore();
 
-	console.log('북마크 목록:', bookmarks);
-
 	return (
 		<div className="w-full">
 			<div className="space-y-4">
