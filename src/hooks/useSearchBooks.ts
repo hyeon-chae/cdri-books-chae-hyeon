@@ -15,9 +15,9 @@ export const useSearchBooks = (query: string, enabled: boolean) =>
 		staleTime: 1000 * 60 * 5, // 5분 동안 데이터 유지
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
-		// select: (data) => ({
-		//   pages: data.pages,
-		//   pageParams: data.pageParams,
-		//   meta: data.pages[0]?.meta,
-		// }),
+		select: (data) => ({
+			pages: data.pages,
+			pageParams: data.pageParams,
+			meta: data.pages[0]?.meta,
+		}),
 	});

@@ -19,7 +19,7 @@ export default function SearchContents() {
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
 		useSearchBooks(searchQuery, enabled);
 
-	const totalCount = data?.pages[0]?.meta.total_count ?? 0;
+	const totalCount = data?.meta.total_count ?? 0;
 	const books = data?.pages.flatMap((page) => page.documents) ?? [];
 
 	const onSearch = useCallback(() => {
