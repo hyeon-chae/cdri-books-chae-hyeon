@@ -55,8 +55,10 @@ button:focus-visible {
 }
 
 input {
-	font-size: 16px;
-	border: none;
+	font-size: 16px !important;
+	border: none !important;
+	box-shadow: none !important;
+	background-color: transparent;
 }
 
 input::placeholder {
