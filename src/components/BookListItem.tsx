@@ -8,6 +8,8 @@ interface BookListItemProps {
 	onToggleDetail: () => void;
 	openDetail: boolean;
 	handlePurchase: (url: string) => void;
+	onToggleFavorite: (isbn: string) => void;
+	favorite: boolean;
 }
 
 export function BookListItem({
@@ -15,17 +17,29 @@ export function BookListItem({
 	onToggleDetail,
 	openDetail,
 	handlePurchase,
+	onToggleFavorite,
+	favorite,
 }: BookListItemProps) {
 	return (
 		<div className="flex items-center justify-between border-b p-4">
 			<div className="flex items-center">
-				<img
-					src={item.thumbnail}
-					alt={item.title}
-					width={48}
-					height={68}
-					className="object-cover mx-8"
-				/>
+				<div className="flex-shrink-0 relative">
+					<img
+						src={item.thumbnail}
+						alt={item.title}
+						width={48}
+						height={68}
+						className="object-cover ml-8 mr-12"
+					/>
+					<img
+						src={`/img/${favorite ? 'like.svg' : 'unlike.svg'}`}
+						alt="찜하기"
+						width={24}
+						height={24}
+						className="absolute top-0 left-14 cursor-pointer"
+						onClick={() => onToggleFavorite(item.isbn)}
+					/>
+				</div>
 				<div className="flex gap-4 items-center">
 					<p className="text-lg font-bold text-text-primary">{item.title}</p>
 					<p className="text-sm text-text-secondary">{item.authors}</p>

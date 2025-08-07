@@ -10,9 +10,15 @@ interface BookItemToggleProps {
 
 export function BookItemToggle({ item }: BookItemToggleProps) {
 	const [openDetail, setOpenDetail] = useState(false);
+	const [favorite, setFavorite] = useState(false);
 
 	const onToggleDetail = useCallback(() => {
 		setOpenDetail((prev) => !prev);
+	}, []);
+
+	const onToggleFavorite = useCallback((isbn: string) => {
+		setFavorite((prev) => !prev);
+		console.log(`Toggled favorite for ISBN: ${isbn}`);
 	}, []);
 
 	const handlePurchase = useCallback((url: string) => {
@@ -20,25 +26,18 @@ export function BookItemToggle({ item }: BookItemToggleProps) {
 		window.open(url, '_blank');
 	}, []);
 
+	const Component = openDetail ? BookDetailItem : BookListItem;
+
 	return (
 		<div>
-			{openDetail ? (
-				// 상세보기 모드
-				<BookDetailItem
-					item={item}
-					onToggleDetail={onToggleDetail}
-					openDetail={openDetail}
-					handlePurchase={handlePurchase}
-				/>
-			) : (
-				// 목록 모드
-				<BookListItem
-					item={item}
-					onToggleDetail={onToggleDetail}
-					openDetail={openDetail}
-					handlePurchase={handlePurchase}
-				/>
-			)}
+			<Component
+				item={item}
+				onToggleDetail={onToggleDetail}
+				openDetail={openDetail}
+				handlePurchase={handlePurchase}
+				onToggleFavorite={onToggleFavorite}
+				favorite={favorite}
+			/>
 		</div>
 	);
 }
