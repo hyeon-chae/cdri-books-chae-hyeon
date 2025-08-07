@@ -7,23 +7,37 @@ interface BookDetailItemProps {
 	item: BookItemData;
 	onToggleDetail: () => void;
 	openDetail: boolean;
+	handlePurchase: (url: string) => void;
+	onToggleFavorite: () => void;
+	favorite: boolean;
 }
 
 export function BookDetailItem({
 	item,
 	onToggleDetail,
 	openDetail,
+	handlePurchase,
+	onToggleFavorite,
+	favorite,
 }: BookDetailItemProps) {
 	return (
 		<div className="flex pt-6 pb-10 px-4 gap-8 border-b items-start justify-between h-[345px]">
 			{/* 책 이미지 */}
-			<div className="w-[200px] flex-shrink-0">
+			<div className="w-[200px] flex-shrink-0 relative">
 				<img
 					src={item.thumbnail}
 					alt={item.title}
 					width={210}
 					height={280}
 					className="object-cover"
+				/>
+				<img
+					src={`/img/${favorite ? 'like.svg' : 'unlike.svg'}`}
+					alt="찜하기"
+					width={24}
+					height={24}
+					className="absolute top-2 right-2 cursor-pointer"
+					onClick={onToggleFavorite}
 				/>
 			</div>
 
@@ -78,7 +92,10 @@ export function BookDetailItem({
 							</div>
 						)}
 					</div>
-					<Button className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[240px]">
+					<Button
+						className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[240px]"
+						onClick={() => handlePurchase(item.url)}
+					>
 						구매하기
 					</Button>
 				</div>
