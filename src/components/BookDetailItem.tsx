@@ -28,7 +28,7 @@ export function BookDetailItem({
 			</div>
 
 			<div className="flex flex-col items-start justify-between gap-4">
-				<div className="flex gap-3 pt-5">
+				<div className="flex gap-2 pt-5">
 					<p className="text-xl font-bold text-[#222222] mb-1">{item.title}</p>
 					<p className="text-sm text-text-subtitle mt-1">{item.authors}</p>
 				</div>
@@ -59,18 +59,24 @@ export function BookDetailItem({
 					<div>
 						<div className="gap-2 flex items-center justify-end mb-2">
 							<p className="text-text-subtitle text-[10px] font-medium">원가</p>
-							<p className="text-lg text-text-primary line-through font-light">
+							<p
+								className={`text-lg text-text-primary ${
+									item.sale_price ? 'font-light line-through' : 'font-bold'
+								}`}
+							>
 								{formatCurrency(item.price, true)}
 							</p>
 						</div>
-						<div className="gap-2 flex items-center justify-end">
-							<p className="text-text-subtitle text-[10px] font-medium">
-								할인가
-							</p>
-							<p className="text-lg text-text-primary line-through font-bold">
-								{formatCurrency(item.sale_price, true)}
-							</p>
-						</div>
+						{item.sale_price && (
+							<div className="gap-2 flex items-center justify-end">
+								<p className="text-text-subtitle text-[10px] font-medium">
+									할인가
+								</p>
+								<p className="text-lg text-text-primary font-bold">
+									{formatCurrency(item.sale_price, true)}
+								</p>
+							</div>
+						)}
 					</div>
 					<Button className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[240px]">
 						구매하기

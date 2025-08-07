@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
-import SearchPage from './SearchContents';
+import SearchContents from './SearchContents';
 import FavoritesContents from './FavoritesContents';
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
 			<Header onCangeTab={setActiveTab} />
 			<h1 className="text-2xl font-bold mb-4"></h1>
 			<div className="w-[960px] mx-auto py-20">
-				{activeTab === 'search' && <SearchPage />}
+				{activeTab === 'search' && <SearchContents />}
 				{activeTab === 'favorites' && <FavoritesContents />}
 			</div>
 		</div>
