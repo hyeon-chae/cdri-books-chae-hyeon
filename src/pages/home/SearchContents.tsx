@@ -1,39 +1,44 @@
+import { useCallback, useState } from 'react';
+
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import Empty from '@/components/Empty';
 import { BookItemToggle } from '@/components/BookItemToggle';
 
-import { useMutation } from '@tanstack/react-query';
-import { getSearchBooks } from '@/lib/api/search';
-import { useState } from 'react';
-import type { BookItemData } from '@/lib/types/search';
-import Empty from '@/components/Empty';
+import { useSearchBooks } from '@/hooks/useSearchBooks';
+import { formatCurrency } from '@/lib/utils';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 
-export default function SearchPage() {
-	const [books, setBooks] = useState<BookItemData[]>([]);
-	const [totalCount, setTotalCount] = useState(0);
+export default function SearchContents() {
+	const [searchQuery, setSearchQuery] = useState('');
+	const [inputValue, setInputValue] = useState('');
 
-	const [searchQuery, setSearchQuery] = useState({
-		query: '소설',
-		page: 1,
-		size: 10,
-	});
+	const [enabled, setEnabled] = useState(false);
 
-	const searchMutation = useMutation({
-		mutationFn: () =>
-			getSearchBooks(searchQuery.query, searchQuery.page, searchQuery.size),
-		onSuccess: (data) => {
-			console.log('Search results:', data);
-			setBooks(data.documents);
-			setTotalCount(data.meta.total_count);
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+		useSearchBooks(searchQuery, enabled);
+
+	const totalCount = data?.pages[0]?.meta.total_count ?? 0;
+	const books = data?.pages.flatMap((page) => page.documents) ?? [];
+
+	const onSearch = useCallback(() => {
+		setSearchQuery(inputValue);
+		setEnabled(true);
+	}, [inputValue]);
+
+	// 스크롤 감지 후 fetchNextPage 호출
+	const loadMoreRef = useInfiniteScroll({
+		onIntersect: () => {
+			if (hasNextPage && !isFetchingNextPage) {
+				fetchNextPage();
+			}
 		},
-		onError: (error: any) => {
-			console.error('Error fetching search results:', error);
-		},
+		enabled: enabled && !!hasNextPage,
 	});
 
 	return (
-		<div className="w-full">
+		<div className="w-full flex-1">
 			<div className="space-y-4">
 				{/* 제목 */}
 				<p className="text-[22px] font-bold text-[##1A1E27]">도서 검색</p>
@@ -48,15 +53,21 @@ export default function SearchPage() {
 						<Input
 							type="text"
 							placeholder="검색어를 입력하세요"
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									onSearch();
+								}
+							}}
+							disabled={isLoading}
 							className="pl-12 pr-4 rounded-full bg-[#F2F4F6] focus-visible:ring-0 focus-visible:ring-offset-0 h-[50px]"
 						/>
 					</div>
 					<Button
 						variant="outline"
 						className="border-[#8D94A0] text-[#8D94A0] px-2.5 py-2.5 text-sm"
-						onClick={() => {
-							searchMutation.mutate();
-						}}
+						onClick={() => onSearch()}
 					>
 						상세검색
 					</Button>
@@ -65,19 +76,31 @@ export default function SearchPage() {
 				{/* 검색 결과 요약*/}
 				<p className="text-sm text-text-primary font-[500] pt-2">
 					도서 검색 결과&nbsp;&nbsp; 총{' '}
-					<span className="text-[#4880EE] font-[500]">21</span>건
+					<span className="text-[#4880EE] font-[500]">
+						{formatCurrency(totalCount)}
+					</span>
+					건
 				</p>
 			</div>
 			{/* 검색 결과 목록 */}
-			<div className="mt-9">
+			<div className="mt-9 h-auto overflow-y-scroll">
 				{books.length === 0 ? (
 					<div className="pt-20">
 						<Empty msg="검색된 결과가 없습니다." />
 					</div>
 				) : (
-					books.map((item, index) => <BookItemToggle key={index} item={item} />)
+					books.map((item) => <BookItemToggle item={item} key={item.isbn} />)
 				)}
 			</div>
+			<div ref={loadMoreRef} style={{ height: '1px' }} />
+			{isLoading && (
+				<p className="text-center text-text-secondary py-10">로딩 중...</p>
+			)}
+			{isFetchingNextPage && (
+				<p className="text-center text-text-secondary py-10">
+					다음 페이지 불러오는 중...
+				</p>
+			)}
 		</div>
 	);
 }
