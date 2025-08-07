@@ -13,7 +13,7 @@ export default function Header({ onCangeTab }: HeaderTab) {
 	return (
 		<header className="w-full">
 			<div className="mx-auto flex max-w-7xl items-center justify-between p-6 ">
-				<h1 className="text-primary">CERTICOS BOOKS</h1>
+				<h1 className="text-text-primary">CERTICOS BOOKS</h1>
 
 				<Tabs defaultValue="search">
 					<TabsList className="flex gap-8 bg-white px-0">

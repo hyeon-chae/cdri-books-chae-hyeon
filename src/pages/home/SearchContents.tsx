@@ -35,7 +35,7 @@ export default function SearchPage() {
 		<div className="w-full">
 			<div className="space-y-6">
 				{/* 제목 */}
-				<h1 className="text-[22px] font-bold text-[##1A1E27]">도서 검색</h1>
+				<p className="text-[22px] font-bold text-[##1A1E27]">도서 검색</p>
 
 				{/* 검색창 + 버튼 */}
 				<div className="flex items-center gap-4">
@@ -62,13 +62,27 @@ export default function SearchPage() {
 				</div>
 
 				{/* 검색 결과 요약*/}
-				<p className="text-sm text-primary font-[500]">
+				<p className="text-sm text-text-primary font-[500]">
 					도서 검색 결과&nbsp;&nbsp; 총{' '}
 					<span className="text-[#4880EE] font-[500]">21</span>건
 				</p>
 			</div>
 			{/* 검색 결과 목록 */}
-			<div className="mt-9">{/* <BookItem /> */}</div>
+			<div className="mt-9">
+				{books.length === 0 ? (
+					<div className="pt-20 gap-6 flex flex-col items-center">
+						<img
+							src="/img/icon_book.svg"
+							alt="검색 결과가 없습니다."
+							width={80}
+							height={80}
+						/>
+						<p className="text-gray-500">검색 결과가 없습니다.</p>
+					</div>
+				) : (
+					books.map((item, index) => <BookItem key={index} item={item} />)
+				)}
+			</div>
 		</div>
 	);
 }

@@ -10,7 +10,7 @@ export default function Home() {
 		<div>
 			<Header onCangeTab={setActiveTab} />
 			<h1 className="text-2xl font-bold mb-4"></h1>
-			<div className="w-[960px] mx-auto px-4 py-20">
+			<div className="w-[960px] mx-auto py-20">
 				{activeTab === 'search' && <SearchPage />}
 				{activeTab === 'favorites' && <FavoritesContents />}
 			</div>
