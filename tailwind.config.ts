@@ -6,13 +6,13 @@ const config: Config = {
 	theme: {
 		extend: {
 			colors: {
-				primary: '#353C49',
-				secondary: '#6D7582',
-				subtitle: '#8D94A0',
-				// primary: {
-				// 	DEFAULT: 'hsl(var(--primary))',
-				// 	foreground: 'hsl(var(--primary-foreground))',
-				// },
+				// primary: '#353C49',
+				// secondary: '#6D7582',
+				// subtitle: '#8D94A0',
+				primary: {
+					DEFAULT: '#4880EE',
+					foreground: 'hsl(var(--primary-foreground))',
+				},
 				red: '#E84118',
 				gray: {
 					DEFAULT: '#DADADA',

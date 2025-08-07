@@ -1,18 +1,21 @@
+// src/App.tsx
 import { useState } from 'react';
 
-import Header from '@/components/Header';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
-	const [activeTab, setActiveTab] = useState('search');
+	const [queryClient] = useState(() => new QueryClient());
 
 	return (
-		<>
-			<Header onCangeTab={setActiveTab} />
-			<div className="">
-				{activeTab === 'search' && <div>도서 검색</div>}
-				{activeTab === 'favorites' && <div>내가 찜한 책</div>}
-			</div>
-		</>
+		<QueryClientProvider client={queryClient}>
+			<BrowserRouter>
+				<AppRoutes />
+			</BrowserRouter>
+			{import.meta.env.local && <ReactQueryDevtools initialIsOpen={false} />}
+		</QueryClientProvider>
 	);
 }
 
