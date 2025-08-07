@@ -7,12 +7,14 @@ interface BookDetailItemProps {
 	item: BookItemData;
 	onToggleDetail: () => void;
 	openDetail: boolean;
+	handlePurchase: (url: string) => void;
 }
 
 export function BookDetailItem({
 	item,
 	onToggleDetail,
 	openDetail,
+	handlePurchase,
 }: BookDetailItemProps) {
 	return (
 		<div className="flex pt-6 pb-10 px-4 gap-8 border-b items-start justify-between h-[345px]">
@@ -78,7 +80,10 @@ export function BookDetailItem({
 							</div>
 						)}
 					</div>
-					<Button className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[240px]">
+					<Button
+						className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[240px]"
+						onClick={() => handlePurchase(item.url)}
+					>
 						구매하기
 					</Button>
 				</div>

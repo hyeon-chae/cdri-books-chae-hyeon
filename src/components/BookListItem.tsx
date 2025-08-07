@@ -7,12 +7,14 @@ interface BookListItemProps {
 	item: BookItemData;
 	onToggleDetail: () => void;
 	openDetail: boolean;
+	handlePurchase: (url: string) => void;
 }
 
 export function BookListItem({
 	item,
 	onToggleDetail,
 	openDetail,
+	handlePurchase,
 }: BookListItemProps) {
 	return (
 		<div className="flex items-center justify-between border-b p-4">
@@ -38,7 +40,10 @@ export function BookListItem({
 						: formatCurrency(item.price, true)}
 				</span>
 				<div className="gap-2 flex items-center">
-					<Button className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[115px]">
+					<Button
+						className="bg-primary text-white hover:bg-[#3a6fd3] p-4 h-[48px] w-[115px]"
+						onClick={() => handlePurchase(item.url)}
+					>
 						구매하기
 					</Button>
 					<Button

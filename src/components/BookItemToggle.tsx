@@ -15,6 +15,11 @@ export function BookItemToggle({ item }: BookItemToggleProps) {
 		setOpenDetail((prev) => !prev);
 	}, []);
 
+	const handlePurchase = useCallback((url: string) => {
+		// 클릭시 새탭으로 url 열기
+		window.open(url, '_blank');
+	}, []);
+
 	return (
 		<div>
 			{openDetail ? (
@@ -23,6 +28,7 @@ export function BookItemToggle({ item }: BookItemToggleProps) {
 					item={item}
 					onToggleDetail={onToggleDetail}
 					openDetail={openDetail}
+					handlePurchase={handlePurchase}
 				/>
 			) : (
 				// 목록 모드
@@ -30,6 +36,7 @@ export function BookItemToggle({ item }: BookItemToggleProps) {
 					item={item}
 					onToggleDetail={onToggleDetail}
 					openDetail={openDetail}
+					handlePurchase={handlePurchase}
 				/>
 			)}
 		</div>
