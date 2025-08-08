@@ -1,10 +1,18 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getSearchBooks } from '@/lib/api/search';
+import type { SearchFilterTarget } from '@/lib/types/search';
 
-export const useSearchBooks = (query: string, enabled: boolean) =>
+const DEFAULT_SEARCH_PAGE_SIZE = 10;
+
+export const useSearchBooks = (
+	query: string,
+	target: SearchFilterTarget,
+	enabled: boolean
+) =>
 	useInfiniteQuery({
-		queryKey: ['books', query],
-		queryFn: ({ pageParam = 1 }) => getSearchBooks(query, pageParam),
+		queryKey: ['books', query, target],
+		queryFn: ({ pageParam = 1 }) =>
+			getSearchBooks(query, pageParam, DEFAULT_SEARCH_PAGE_SIZE, target),
 
 		initialPageParam: 1,
 

@@ -9,28 +9,42 @@ import { useSearchBooks } from '@/hooks/useSearchBooks';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 
 import { useSearchHistoryStore } from '@/stores/searchHistoryStore';
+import type { SearchFilterTarget } from '@/lib/types/search';
 
 export default function SearchContents() {
 	const { histories, addHistory, removeHistory } = useSearchHistoryStore();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [inputValue, setInputValue] = useState('');
+	const [searchFilter, setSearchFilter] = useState<SearchFilterTarget>('title');
 
 	const [enabled, setEnabled] = useState(false);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-		useSearchBooks(searchQuery, enabled);
+		useSearchBooks(searchQuery, searchFilter, enabled);
 
 	const totalCount = data?.meta.total_count ?? 0;
 	const books = data?.pages.flatMap((page) => page.documents) ?? [];
 
-	const onSearch = useCallback(() => {
-		setSearchQuery(inputValue);
-		setEnabled(true);
-		addHistory(inputValue);
-		inputRef.current?.blur();
-	}, [inputValue]);
+	const onSearch = useCallback(
+		(filterKeyword?: string, target?: SearchFilterTarget) => {
+			// filterKeyword가 있으면 해당 키워드로 검색
+			const query = filterKeyword || inputValue;
+			if (!query) return;
+
+			if (target) {
+				setSearchFilter(target);
+			}
+
+			filterKeyword && setInputValue(query);
+			setSearchQuery(query);
+			setEnabled(true);
+			addHistory(query);
+			inputRef.current?.blur();
+		},
+		[inputValue, addHistory]
+	);
 
 	const onRemoveHistory = useCallback(
 		(keyword: string) => {
