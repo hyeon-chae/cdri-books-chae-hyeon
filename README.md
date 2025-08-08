@@ -107,6 +107,14 @@ npm run dev
 - 검색 시 입력창 자동 블러 처리
 
 ## 미리보기
+### 검색
+![시연](./public/preview/search.gif)
+
+### 검색
+![시연](./public/preview/search_filter.gif)
+
+### 검색
+![시연](./public/preview/favorite.gif)
 
 
 ## 향후 개선 포인트
