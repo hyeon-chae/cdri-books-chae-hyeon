@@ -160,15 +160,13 @@ CSS 작성 시간을 줄여주고, 디자이너와 협업할 때도 직관적인
 
 ## 미리보기
 ### 검색
-![검색 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/search.gif)
-<img src="/preview/search.gif" alt="검색 시연" width="500">
-
+<img src="/public/preview/search.gif" alt="검색 시연" width="500">
 
 ### 검색 필터
-![검색 필터 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/search_filter.gif)
+<img src="/public/preview/search_filter.gif" alt="검색 시연" width="500">
 
 ### 찜하기
-![찜하기 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/favorite.gif)
+<img src="/public/preview/favorite.gif" alt="검색 시연" width="500">
 
 ---
 
