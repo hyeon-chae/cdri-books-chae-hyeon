@@ -1,4 +1,4 @@
-export type SearchResult = {
+export type SearchBooksResponse = {
 	meta: {
 		total_count: number;
 		pageable_count: number;
@@ -20,4 +20,13 @@ export type BookItemData = {
 	sale_price: number;
 	thumbnail: string;
 	status: string;
+};
+
+export type SearchFilterTarget = 'title' | 'person' | 'publisher' | 'isbn';
+
+export type SearchQuery = {
+	query: string;
+	page: number;
+	size: number;
+	target?: SearchFilterTarget;
 };
