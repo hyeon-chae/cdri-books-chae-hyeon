@@ -156,16 +156,19 @@ CSS 작성 시간을 줄여주고, 디자이너와 협업할 때도 직관적인
 - 쿼리 중복 방지, 창 포커스/네트워크 복원 시 불필요한 리패치 방지
 - 검색 시 입력창 자동 블러 처리
 
+---
+
 ## 미리보기
 ### 검색
-![시연](/preview/search.gif)
+![검색 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/search.gif)
 
 ### 검색 필터
-![시연](/preview/search_filter.gif)
+![검색 필터 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/search_filter.gif)
 
 ### 찜하기
-![시연](/preview/favorite.gif)
+![찜하기 시연](https://raw.githubusercontent.com/chaengguri/cdri-books-chae-hyeon/main/public/preview/favorite.gif)
 
+---
 
 ## 향후 개선 포인트
 - Skeleton UI 및 로딩 스피너 추가
