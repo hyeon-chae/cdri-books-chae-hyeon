@@ -194,7 +194,7 @@ export function SearchInput({
 									<DropdownMenuItem
 										key={option.value}
 										onClick={() => setSearchFilter(option.value)}
-										className="text-sm px-3 py-2 text-text-primary font-medium cursor-pointer hover:bg-gray-100"
+										className="text-sm px-3 py-2 text-[#8D94A0] font-medium cursor-pointer hover:bg-gray-100"
 									>
 										{option.label}
 									</DropdownMenuItem>
