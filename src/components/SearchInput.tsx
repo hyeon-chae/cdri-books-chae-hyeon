@@ -3,19 +3,45 @@ import { useCallback, useRef, useState } from 'react';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import useClickOutside from '@/hooks/useClickOutside';
 import type { RefObject } from 'react';
+import type { SearchFilterTarget } from '@/lib/types/search';
 
 interface SearchInputProps {
 	inputValue: string;
 	onChange: (value: string) => void;
-	onSubmit: () => void;
+	onSubmit: (filterKeyword?: string, target?: SearchFilterTarget) => void;
 	onHistoryClick: (keyword: string) => void;
 	onRemoveHistory: (keyword: string) => void;
 	histories: string[];
 	inputRef: RefObject<HTMLInputElement | null>;
 }
+
+const filterOptions = [
+	{
+		label: '제목',
+		value: 'title',
+	},
+	{
+		label: '저자명',
+		value: 'person',
+	},
+	{
+		label: '출판사',
+		value: 'publisher',
+	},
+	{
+		label: 'ISBN',
+		value: 'isbn',
+	},
+] as const;
 
 export function SearchInput({
 	inputValue,
@@ -29,16 +55,30 @@ export function SearchInput({
 	const [showDropdown, setShowDropdown] = useState(false);
 
 	const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
-	const [showFilterDropdown, setShowFilterDropdown] = useState(false);
-	const [searchFilter, setSearchFilter] = useState<
-		'제목' | '저자명' | '출판사'
-	>('제목');
+	const [searchFilter, setSearchFilter] = useState<SearchFilterTarget>('title');
+	const [advancedSearchQuery, setAdvancedSearchQuery] = useState('');
 
 	const inputWrapperRef = useRef<HTMLDivElement>(null);
 	const filterRef = useRef<HTMLDivElement>(null);
 
 	useClickOutside(inputWrapperRef, () => setShowDropdown(false));
-	useClickOutside(filterRef, () => setShowAdvancedSearch(false));
+
+	const handleShowAdvancedSearch = useCallback(() => {
+		setShowAdvancedSearch((prev) => !prev);
+		setShowDropdown(false);
+		onChange(''); // Clear input when toggling advanced search
+	}, []);
+
+	const handleCloseAdvancedSearch = useCallback(() => {
+		setShowAdvancedSearch(false);
+		intialFilter();
+	}, []);
+
+	const handleAdvancedSearch = useCallback(() => {
+		onSubmit(advancedSearchQuery, searchFilter);
+		setShowAdvancedSearch(false);
+		intialFilter();
+	}, [advancedSearchQuery, searchFilter, onSubmit]);
 
 	const handleSubmit = useCallback(
 		(e: React.FormEvent) => {
@@ -48,6 +88,11 @@ export function SearchInput({
 		},
 		[onSubmit]
 	);
+
+	const intialFilter = useCallback(() => {
+		setAdvancedSearchQuery(''); // Clear advanced search query
+		setSearchFilter('title'); // Reset filter to default
+	}, []);
 
 	return (
 		<div className="flex items-center gap-4 relative" ref={inputWrapperRef}>
@@ -67,7 +112,11 @@ export function SearchInput({
 						placeholder="검색어를 입력하세요"
 						value={inputValue}
 						onChange={(e) => onChange(e.target.value)}
-						onFocus={() => setShowDropdown(true)}
+						onFocus={() => {
+							setShowDropdown(true);
+							setShowAdvancedSearch(false);
+							intialFilter();
+						}}
 						className="px-3 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 h-[50px] placeholder:text-[#8D94A0]"
 					/>
 				</form>
@@ -101,7 +150,7 @@ export function SearchInput({
 			<Button
 				variant="outline"
 				className="border-[#8D94A0] text-[#8D94A0] px-2.5 py-2.5 text-sm"
-				onClick={() => setShowAdvancedSearch((prev) => !prev)}
+				onClick={handleShowAdvancedSearch}
 			>
 				상세검색
 			</Button>
@@ -116,43 +165,47 @@ export function SearchInput({
 						<X
 							size={20}
 							className="cursor-pointer text-gray-400 hover:text-gray-600"
-							onClick={() => setShowAdvancedSearch(false)}
+							onClick={handleCloseAdvancedSearch}
 						/>
 					</div>
 
 					{/* 필터 선택 + 입력 */}
 					<div className="flex items-center gap-3">
-						<div className="relative border-b">
-							<Button
-								variant="ghost"
-								className="flex justify-between text-sm text-text-primary font-bold bg-white w-[100px] hover:bg-none px-2"
-								onClick={() => setShowFilterDropdown((prev) => !prev)}
-							>
-								{searchFilter}
-								<ChevronDown className="w-4 h-4 text-right" />
-							</Button>
-							{showFilterDropdown && (
-								<div className="absolute top-full mt-2 left-0 bg-white border rounded-md shadow-sm text-sm w-24">
-									{['제목', '저자명', '출판사'].map((option) => (
-										<div
-											key={option}
-											onClick={() => {
-												setSearchFilter(option as typeof searchFilter);
-												setShowFilterDropdown(false);
-											}}
-											className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-										>
-											{option}
-										</div>
-									))}
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<div className="border-b border-[#D2D6DA]">
+									<Button
+										variant="ghost"
+										className="flex justify-between items-center text-sm text-text-primary font-bold bg-white hover:bg-none px-2 min-w-[100px]"
+									>
+										{filterOptions.find((el) => el.value === searchFilter)
+											?.label ?? '제목'}
+										<ChevronDown className="w-4 h-4 ml-1 text-right" />
+									</Button>
 								</div>
-							)}
-						</div>
-						<div className="border-b w-full">
+							</DropdownMenuTrigger>
+
+							<DropdownMenuContent
+								ref={filterRef}
+								align="start"
+								className="w-24 shadow-[0px_4px_14px_6px_rgba(151,151,151,0.15)]"
+							>
+								{filterOptions.map((option) => (
+									<DropdownMenuItem
+										key={option.value}
+										onClick={() => setSearchFilter(option.value)}
+										className="text-sm px-3 py-2 text-text-primary font-medium cursor-pointer hover:bg-gray-100"
+									>
+										{option.label}
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
+						<div className="w-full border-b border-primary">
 							<Input
 								placeholder="검색어 입력"
-								value={inputValue}
-								onChange={(e) => onChange(e.target.value)}
+								value={advancedSearchQuery}
+								onChange={(e) => setAdvancedSearchQuery(e.target.value)}
 								className="flex-1 focus-visible:ring-0 text-sm"
 							/>
 						</div>
@@ -161,10 +214,7 @@ export function SearchInput({
 					{/* 검색하기 버튼 */}
 					<Button
 						className="bg-[#4880EE] text-white rounded-md hover:bg-[#3a6fd3]"
-						onClick={() => {
-							onSubmit();
-							setShowAdvancedSearch(false);
-						}}
+						onClick={handleAdvancedSearch}
 					>
 						검색하기
 					</Button>

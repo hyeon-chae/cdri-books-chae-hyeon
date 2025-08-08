@@ -1,14 +1,19 @@
 import { apiGet } from './common';
 
-import type { SearchResult } from '../types/search';
+import type {
+	SearchBooksResponse,
+	SearchFilterTarget,
+	SearchQuery,
+} from '../types/search';
 
 export const getSearchBooks = async (
 	query: string,
 	page: number = 1,
-	size: number = 10
+	size: number = 10,
+	target?: SearchFilterTarget
 ) => {
-	const params = { query, page, size };
+	const params: SearchQuery = { query, page, size, target };
 
 	// 카카오 API를 통해 책 검색
-	return await apiGet<SearchResult>('/search/book', params);
+	return await apiGet<SearchBooksResponse>('/search/book', params);
 };
